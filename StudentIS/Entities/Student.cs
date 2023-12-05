@@ -1,6 +1,6 @@
 ﻿namespace StudentIS.Entities
 {
-    public class Student
+    public class Student : BaseEntity
     {
     }
 }
