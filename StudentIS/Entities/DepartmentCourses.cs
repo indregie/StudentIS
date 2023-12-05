@@ -1,10 +1,9 @@
 ﻿namespace StudentIS.Entities
 {
-    public class Student : BaseEntity
+    public class DepartmentCourses
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
         public Guid DepartmentId { get; set; }
+        public Guid CoursesId { get; set; }
     }
 }
