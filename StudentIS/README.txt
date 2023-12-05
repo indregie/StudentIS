@@ -1,0 +1,35 @@
+﻿Funkcionalumai:
+1. Sukurti departamentą ir į jį pridėti studentus, paskaitas(papildomi points jei pridedamos paskaitos jau egzistuojančios duomenų bazėje).
+2. Pridėti studentus/paskaitas į jau egzistuojantį departamentą.
+3. Sukurti paskaitą ir ją priskirti prie departamento.
+ 4. Sukurti studentą, jį pridėti prie egzistuojančio departamento ir priskirti jam egzistuojančias paskaitas.
+5. Perkelti studentą į kitą departamentą(bonus points jei pakeičiamos ir jo paskaitos).
+6. Atvaizduoti visus departamento studentus.
+7. Atvaizduoti visas departamento paskaitas.
+8. Atvaizduoti visas paskaitas pagal studentą.
+
+
+
+DBUP:
+ 
+EnsureDatabase.For.PostgresqlDatabase(connectionString);
+ 
+var upgrader =
+    DeployChanges.To
+        .PostgresqlDatabase(connectionString)
+        .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+        .LogToConsole()
+        .Build();
+ 
+var result = upgrader.PerformUpgrade();
+ 
+if (!result.Successful)
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine(result.Error);
+    Console.ResetColor();
+#if DEBUG
+    Console.ReadLine();
+#endif
+    return -1;
+}
