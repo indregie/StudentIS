@@ -11,7 +11,9 @@
         public BaseEntity()
         {
             Created = DateTime.Now;
+            CreatedBy = "Indre";
             Modified = DateTime.Now;
+            ModifiedBy = "Indre";
         }
     }
 }

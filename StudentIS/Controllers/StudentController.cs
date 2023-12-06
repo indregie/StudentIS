@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using StudentIS.Dtos;
+using StudentIS.Entities;
 using StudentIS.Interfaces;
 
 namespace StudentIS.Controllers
+
+
 {
     [ApiController]
     [Route("Students:[controller]")]
@@ -18,11 +22,35 @@ namespace StudentIS.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public IActionResult GetStudents()
+        //perdaryti async
+        //[HttpGet]
+        //public IActionResult GetStudents()
+        //{
+        //    _logger.LogWarning("Some warning");
+        //    return Ok(_studentService.GetStudents());
+        //}
+
+
+
+
+        [HttpPost]
+        public IActionResult CreateDepartmentStudentsCourses(
+            [FromBody] CreateDepartmentRequestModel req 
+        )
         {
-            _logger.LogWarning("Some warning");
-            return Ok(_studentService.GetStudents());
+            return Ok(_studentService.CreateDepartmentStudentsCourses(
+                req.department,
+                req.students
+            ));
+        }
+
+        [HttpGet]
+        public IActionResult GetDepartmentCourses(
+            [FromQuery] int departmentId   
+        )
+        {
+            Console.WriteLine(departmentId);
+            return Ok(_studentService.GetDepartmentCourses(departmentId));
         }
     }
 }
