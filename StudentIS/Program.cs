@@ -1,27 +1,12 @@
 using DbUp;
+using StudentIS;
+using StudentIS.Interfaces;
+using StudentIS.Repositories;
+using StudentIS.Services;
 using System.Reflection;
 
-EnsureDatabase.For.PostgresqlDatabase("User ID=postgres;Password=115711;Host=localhost;Port=5432;Database=students_is;");
 
-var upgrader =
-    DeployChanges.To
-        .PostgresqlDatabase("User ID=postgres;Password=115711;Host=localhost;Port=5432;Database=students_is;")
-        .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
-        .LogToConsole()
-        .Build();
-
-var result = upgrader.PerformUpgrade();
-
-if (!result.Successful)
-{
-    Console.ForegroundColor = ConsoleColor.Red;
-    Console.WriteLine(result.Error);
-    Console.ResetColor();
-#if DEBUG
-    Console.ReadLine();
-#endif
-}
-
+DbUpSetup.DbSetup();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +16,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<IStudentRepository, StudentRepository>();
+builder.Services.AddTransient<IStudentService, StudentService>();
 
 var app = builder.Build();
 

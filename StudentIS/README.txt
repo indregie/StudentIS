@@ -15,6 +15,7 @@ Funkcionalumai:
 
 
 
+
 DBUP:
  
 EnsureDatabase.For.PostgresqlDatabase(connectionString);
