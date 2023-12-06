@@ -1,12 +1,13 @@
 using DbUp;
+using Serilog;
 using StudentIS;
 using StudentIS.Interfaces;
 using StudentIS.Repositories;
 using StudentIS.Services;
 using System.Reflection;
 
-
-DbUpSetup.DbSetup();
+//DbSetup run
+//DbUpSetup.DbSetup();
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,15 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient<IStudentRepository, StudentRepository>();
 builder.Services.AddTransient<IStudentService, StudentService>();
+
+//serilog
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 var app = builder.Build();
 
