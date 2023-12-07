@@ -5,8 +5,6 @@ using StudentIS.Interfaces;
 using StudentIS.Services;
 
 namespace StudentIS.Controllers
-
-
 {
     [ApiController]
     [Route("[action]")]

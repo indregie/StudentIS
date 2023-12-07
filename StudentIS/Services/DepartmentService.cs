@@ -28,5 +28,12 @@ namespace StudentIS.Services
         {
             return _departmentRepository.GetDepartmentStudents(departmentId).ToList();
         }
+
+        public bool CheckDepartmentExistance(int departmentId)
+        {
+            List<Department> deps = _departmentRepository.CheckDepartmentExistance(departmentId).ToList();
+            if (deps.Count > 0) return true;
+            return false;
+        }
     }
 }

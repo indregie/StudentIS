@@ -7,5 +7,6 @@ namespace StudentIS.Interfaces
         public int CreateDepartmentStudentsCourses(Department department, List<Student> students);
         public IEnumerable<Course> GetDepartmentCourses(int departmentId);
         public IEnumerable<Student> GetDepartmentStudents(int departmentId);
+        public IEnumerable<Department> CheckDepartmentExistance(int departmentId);
     }
 }
