@@ -2,13 +2,14 @@
 using StudentIS.Dtos;
 using StudentIS.Entities;
 using StudentIS.Interfaces;
+using StudentIS.Services;
 
 namespace StudentIS.Controllers
 
 
 {
     [ApiController]
-    [Route("Students:[controller]")]
+    [Route("[action]")]
     public class StudentController : Controller
     {
 
@@ -23,34 +24,23 @@ namespace StudentIS.Controllers
         }
 
         //perdaryti async
-        //[HttpGet]
-        //public IActionResult GetStudents()
-        //{
-        //    _logger.LogWarning("Some warning");
-        //    return Ok(_studentService.GetStudents());
-        //}
-
-
-
-
-        [HttpPost]
-        public IActionResult CreateDepartmentStudentsCourses(
-            [FromBody] CreateDepartmentRequestModel req 
-        )
+        [HttpGet]
+        public IActionResult GetStudents()
         {
-            return Ok(_studentService.CreateDepartmentStudentsCourses(
-                req.department,
-                req.students
-            ));
+            _logger.LogWarning("Some warning");
+            return Ok(_studentService.GetStudents());
         }
 
         [HttpGet]
-        public IActionResult GetDepartmentCourses(
-            [FromQuery] int departmentId   
-        )
+        public IActionResult GetStudentCourses(
+                [FromQuery] int studentId
+            )
         {
-            Console.WriteLine(departmentId);
-            return Ok(_studentService.GetDepartmentCourses(departmentId));
+            return Ok(_studentService.GetStudentCourses(studentId));
         }
+
+
+
+
     }
 }

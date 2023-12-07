@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using StudentIS.Entities;
 using StudentIS.Interfaces;
+using StudentIS.Repositories;
 
 namespace StudentIS.Services
 {
@@ -18,15 +19,10 @@ namespace StudentIS.Services
             return _studentRepository.GetStudents().ToList();
         }
 
-    
-        public int CreateDepartmentStudentsCourses(Department department, List<Student> students)
+        public List<Course> GetStudentCourses(int studentId)
         {
-            return _studentRepository.CreateDepartmentStudentsCourses(department, students);
+            return _studentRepository.GetStudentCourses(studentId).ToList();
         }
 
-        public List<Course> GetDepartmentCourses(int departmentId)
-        {
-            return _studentRepository.GetDepartmentCourses(departmentId).ToList();
-        }
     }
 }

@@ -21,6 +21,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IStudentRepository, StudentRepository>();
 builder.Services.AddTransient<IStudentService, StudentService>();
 
+builder.Services.AddTransient<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddTransient<IDepartmentService, DepartmentService>();
+
 //serilog
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
