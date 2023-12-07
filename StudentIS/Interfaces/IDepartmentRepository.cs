@@ -4,9 +4,9 @@ namespace StudentIS.Interfaces
 {
     public interface IDepartmentRepository
     {
-        public int CreateDepartmentStudentsCourses(Department department, List<Student> students);
-        public IEnumerable<Course> GetDepartmentCourses(int departmentId);
-        public IEnumerable<Student> GetDepartmentStudents(int departmentId);
-        public IEnumerable<Department> CheckDepartmentExistance(int departmentId);
+        int CreateDepartmentStudentsCourses(Department department, List<Student> students, List<Course> courses);
+        IEnumerable<Course> GetDepartmentCourses(int departmentId);
+        IEnumerable<Student> GetDepartmentStudents(int departmentId);
+        IEnumerable<Department> CheckDepartmentExistance(int departmentId);
     }
 }

@@ -14,9 +14,9 @@ namespace StudentIS.Services
 
 
 
-        public int CreateDepartmentStudentsCourses(Department department, List<Student> students)
+        public int CreateDepartmentStudentsCourses(Department department, List<Student> students, List<Course> courses)
         {
-            return _departmentRepository.CreateDepartmentStudentsCourses(department, students);
+            return _departmentRepository.CreateDepartmentStudentsCourses(department, students, courses);
         }
 
         public List<Course> GetDepartmentCourses(int departmentId)

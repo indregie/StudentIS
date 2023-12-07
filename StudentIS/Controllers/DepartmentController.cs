@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using StudentIS.Dtos;
+using StudentIS.Dtos.Request;
 using StudentIS.Interfaces;
 
 namespace StudentIS.Controllers
@@ -19,13 +19,13 @@ namespace StudentIS.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateDepartmentStudentsCourses(
-            [FromBody] CreateDepartmentRequestModel req
-        )
+        public IActionResult CreateDepartmentStudentsCourses([FromBody] CreateDepartmentRequestModel req)
         {
+
             return Ok(_departmentService.CreateDepartmentStudentsCourses(
                 req.department,
-                req.students
+                req.students,
+                req.courses
             ));
         }
 
@@ -39,12 +39,12 @@ namespace StudentIS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetDepartmentStudents(
-            [FromQuery] int departmentId
-)
+        public IActionResult GetDepartmentStudents([FromQuery] int departmentId)
         {
             Console.WriteLine(departmentId);
             return Ok(_departmentService.GetDepartmentStudents(departmentId));
         }
+
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudentIS.Dtos;
 using StudentIS.Entities;
+using StudentIS.Exceptions;
 using StudentIS.Interfaces;
 using StudentIS.Services;
 
@@ -39,6 +40,19 @@ namespace StudentIS.Controllers
 
 
 
+        [HttpPost]
+        public IActionResult AddStudent(Student student)
+        {
+           try
+           {
+                return Ok(_studentService.AddStudent(student));
+           } 
+            catch (DepartmentNotFoundException ex) 
+           {
+                return BadRequest(ex.Message);
+           }
+
+        }
 
     }
 }

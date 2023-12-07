@@ -2,98 +2,125 @@
 using Npgsql;
 using StudentIS.Entities;
 using StudentIS.Interfaces;
+using System.Data;
 
 namespace StudentIS.Repositories;
 
 public class DepartmentRepository : IDepartmentRepository
 {
-    // Sukurti departamentą ir į jį pridėti studentus, paskaitas(papildomi points jei pridedamos paskaitos jau egzistuojančios duomenų bazėje).
-    // jei bus bandoma pridėti paskaitą, kurios nėra db, tarpinės lentos foreign key'us išmes klaidą :)) todėl bonus points sąlyga savotiškai tenkinama
-    public int CreateDepartmentStudentsCourses(Department department, List<Student> students)
+    private readonly IDbConnection _connection;
+
+    public DepartmentRepository(IDbConnection connection)
     {
+        _connection = connection;
+    }
 
-        using (var connection = new NpgsqlConnection("User ID=postgres;Password=115711;Host=localhost;Port=5432;Database=students_is;"))
+    // Sukurti departamentą ir į jį pridėti studentus, paskaitas(papildomi points jei pridedamos paskaitos jau egzistuojančios duomenų bazėje).
+    public int CreateDepartmentStudentsCourses(Department department, List<Student> students, List<Course> courses)
+    {
+        _connection.Open();
+        using (var transaction = _connection.BeginTransaction(System.Data.IsolationLevel.Snapshot))
         {
-            connection.Open();
-            using (var transaction = connection.BeginTransaction(System.Data.IsolationLevel.Snapshot))
+
+            string sql = $"INSERT INTO public.departments " +
+            $"(name, created, created_by, modified, modified_by)" +
+            $" VALUES (@name, @created, @created_by, @modified, @modified_by) returning id as Id";
+            var queryArguments = new
             {
+                name = department.Name,
+                created = department.Created,
+                created_by = department.CreatedBy,
+                modified = department.Modified,
+                modified_by = department.ModifiedBy
+            };
+            int depId = _connection.QuerySingle<int>(sql, queryArguments, transaction: transaction);
 
-                string sql = $"INSERT INTO public.departments (name, created, created_by, modified, modified_by) VALUES (@name, @created, @created_by, @modified, @modified_by)";
-                var queryArguments = new
+            foreach (var student in students)
+            {
+                string sqlStud = $"INSERT INTO public.students (name, surname, department_id, created, created_by, modified, " +
+                    $"modified_by) VALUES (@name, @surname, @department_id, @created, @created_by, @modified, @modified_by)";
+                var queryArgumentsStud = new
                 {
-                    name = department.Name,
-                    created = department.Created,
-                    created_by = department.CreatedBy,
-                    modified = department.Modified,
-                    modified_by = department.ModifiedBy
+                    name = student.Name,
+                    surname = student.Surname,
+                    department_id = depId,
+                    created = student.Created,
+                    created_by = student.CreatedBy,
+                    modified = student.Modified,
+                    modified_by = student.ModifiedBy
                 };
-
-                foreach (var student in students)
-                {
-                    string sqlStud = $"INSERT INTO public.students (name, surname, department_id, created, created_by, modified, modified_by) VALUES (@name, @surname, @department_id, @created, @created_by, @modified, @modified_by)";
-                    var queryArgumentsStud = new
-                    {
-                        name = student.Name,
-                        surname = student.Surname,
-                        department_id = student.DepartmentId,
-                        created = student.Created,
-                        created_by = student.CreatedBy,
-                        modified = student.Modified,
-                        modified_by = student.ModifiedBy
-                    };
-                }
-
-
-                connection.Execute(sql, queryArguments, transaction: transaction);
-                transaction.Commit();
-                return 0;
+                _connection.Execute(sqlStud, queryArgumentsStud, transaction: transaction);
             }
+
+            foreach (var course in courses)
+            {
+                string sqlCourse = $"INSERT INTO public.courses (name, created, created_by, modified, modified_by)" +
+                    $" VALUES (@name, @created, @created_by, @modified, @modified_by) returning id as Id";
+                var queryArgumentsCourse = new
+                {
+                    name = course.Name,
+                    created = course.Created,
+                    created_by = course.CreatedBy,
+                    modified = course.Modified,
+                    modified_by = course.ModifiedBy
+                };
+                int courseId = _connection.Execute(sqlCourse, queryArgumentsCourse, transaction: transaction);
+
+                string sqlDepCourse = $"INSERT INTO public.department_courses (department_id, course_id, created, created_by," +
+                    $" modified, modified_by) VALUES (@department_id, @course_id, @created, @created_by, @modified, @modified_by)";
+                var queryArgumentsDepCourse = new
+                {
+                    department_id = depId,
+                    course_id = courseId,
+                    created = course.Created,
+                    created_by = course.CreatedBy,
+                    modified = course.Modified,
+                    modified_by = course.ModifiedBy
+                };
+                _connection.Execute(sqlDepCourse, queryArgumentsDepCourse, transaction: transaction);
+            }
+
+            transaction.Commit();
+            return 0;
         }
+
     }
 
     //Atvaizduoti visus departamento studentus.
     public IEnumerable<Student> GetDepartmentStudents(int departmentId)
     {
-        using (var connection = new NpgsqlConnection("User ID=postgres;Password=115711;Host=localhost;Port=5432;Database=students_is;"))
+        var queryArguments = new
         {
-            var queryArguments = new
-            {
-                departmentId,
-            };
+            departmentId,
+        };
 
-            return connection.Query<Student>("select * from students s join departments d on d.id = s.department_id where d.id = @departmentId", queryArguments);
-        }
+        return _connection.Query<Student>("select * from students s join departments d on d.id = s.department_id where d.id = @departmentId", queryArguments);
     }
 
     //Atvaizduoti visas departamento paskaitas.
     public IEnumerable<Course> GetDepartmentCourses(int departmentId)
     {
-        using (var connection = new NpgsqlConnection("User ID=postgres;Password=115711;Host=localhost;Port=5432;Database=students_is;"))
-        {
-            var queryArguments = new
-            {
-                departmentId,
-            };
 
-            return connection.Query<Course>("select * " +
-                "from courses c " +
-                "join department_courses dc on dc.course_id = c.id " +
-                "where dc.department_id = @departmentId", queryArguments);
-        }
+        var queryArguments = new
+        {
+            departmentId,
+        };
+
+        return _connection.Query<Course>("select * " +
+            "from courses c " +
+            "join department_courses dc on dc.course_id = c.id " +
+            "where dc.department_id = @departmentId", queryArguments);
     }
 
     //Patikrinti ar departamentas egzistuoja
     public IEnumerable<Department> CheckDepartmentExistance(int departmentId)
     {
-        using (var connection = new NpgsqlConnection("User ID=postgres;Password=115711;Host=localhost;Port=5432;Database=students_is;"))
+        var queryArguments = new
         {
-            var queryArguments = new
-            {
-                departmentId,
-            };
+            departmentId,
+        };
 
-            return connection.Query<Department>("select * from departments where id = @departmentId", queryArguments);
-        }
+        return _connection.Query<Department>("select * from departments where id = @departmentId", queryArguments);
     }
 }
 

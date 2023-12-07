@@ -1,9 +1,11 @@
 using DbUp;
+using Npgsql;
 using Serilog;
 using StudentIS;
 using StudentIS.Interfaces;
 using StudentIS.Repositories;
 using StudentIS.Services;
+using System.Data;
 using System.Reflection;
 
 //DbSetup run
@@ -23,6 +25,12 @@ builder.Services.AddTransient<IStudentService, StudentService>();
 
 builder.Services.AddTransient<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddTransient<IDepartmentService, DepartmentService>();
+
+builder.Services.AddTransient<ICourseRepository, CourseRepository>();
+builder.Services.AddTransient<ICourseService, CourseService>();
+
+var connectionString = builder.Configuration.GetConnectionString("PostgreConnection");
+builder.Services.AddTransient<IDbConnection>(sp => new NpgsqlConnection(connectionString));
 
 //serilog
 var logger = new LoggerConfiguration()

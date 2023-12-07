@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using StudentIS.Entities;
+using StudentIS.Exceptions;
 using StudentIS.Interfaces;
 using StudentIS.Repositories;
 
@@ -28,10 +29,14 @@ namespace StudentIS.Services
             return _studentRepository.GetStudentCourses(studentId).ToList();
         }
 
-        public int AddStudent(int departmentId, Student student)
+        public Student AddStudent(Student student)
         {
-            if (_departmentService.CheckDepartmentExistance(departmentId)) return 1;
-            return 0;
+            if (_departmentService.CheckDepartmentExistance(student.DepartmentId))
+            {
+                return _studentRepository.AddStudent(student);
+               
+            }
+            throw new DepartmentNotFoundException("Department not found.");
         }
 
     }
