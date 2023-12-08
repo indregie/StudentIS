@@ -83,7 +83,6 @@ public class DepartmentRepository : IDepartmentRepository
             transaction.Commit();
             return 0;
         }
-
     }
 
     //Atvaizduoti visus departamento studentus.

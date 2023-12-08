@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudentIS.Dtos.Request;
+using StudentIS.Exceptions;
 using StudentIS.Interfaces;
 
 namespace StudentIS.Controllers
@@ -29,17 +30,29 @@ namespace StudentIS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetDepartmentCourses(
-            [FromQuery] int departmentId
-        )
+        public IActionResult GetDepartmentCourses([FromQuery] int departmentId)
         {
-            return Ok(_departmentService.GetDepartmentCourses(departmentId));
+            try
+            {
+                return Ok(_departmentService.GetDepartmentCourses(departmentId));
+            }
+            catch (DepartmentNotFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
         public IActionResult GetDepartmentStudents([FromQuery] int departmentId)
         {
-            return Ok(_departmentService.GetDepartmentStudents(departmentId));
+            try
+            {
+                return Ok(_departmentService.GetDepartmentStudents(departmentId));
+            }
+            catch (DepartmentNotFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
 

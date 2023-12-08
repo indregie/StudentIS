@@ -49,7 +49,7 @@ namespace StudentIS.Services
         {
             if (!CheckStudentExistance(studentId))
             {
-                throw new DepartmentNotFoundException("Student not found.");
+                throw new StudentNotFoundException("Student not found.");
             }
             if (!_departmentService.CheckDepartmentExistance(departmentId) )
             {

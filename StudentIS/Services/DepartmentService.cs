@@ -1,4 +1,5 @@
 ﻿using StudentIS.Entities;
+using StudentIS.Exceptions;
 using StudentIS.Interfaces;
 
 namespace StudentIS.Services
@@ -19,11 +20,19 @@ namespace StudentIS.Services
 
         public List<Course> GetDepartmentCourses(int departmentId)
         {
+            if (!CheckDepartmentExistance(departmentId))
+            {
+                throw new DepartmentNotFoundException("Department not found.");
+            }
             return _departmentRepository.GetDepartmentCourses(departmentId).ToList();
         }
 
         public List<Student> GetDepartmentStudents(int departmentId)
         {
+            if (!CheckDepartmentExistance(departmentId))
+            {
+                throw new DepartmentNotFoundException("Department not found.");
+            }
             return _departmentRepository.GetDepartmentStudents(departmentId).ToList();
         }
 
