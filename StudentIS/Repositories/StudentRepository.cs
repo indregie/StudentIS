@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
+using StudentIS.Dtos.Request;
 using StudentIS.Entities;
 using StudentIS.Interfaces;
 using System.Collections.Generic;
@@ -32,15 +33,17 @@ namespace StudentIS.Repositories
         }
 
         //Pridėti studentą į jau egzistuojantį departamentą
-        public Student AddStudent(Student student)
+        public Student AddStudent(AddStudentRequestModel req)
         {
+                var student = new Student();    
                 string sql = $"insert into students(name, surname, department_id, created, created_by, modified, modified_by) " +
-                $"values(@name, @surname, @department_id, @created, @created_by, @modified, @modified_by)";
+                $"values(@name, @surname, @department_id, @created, @created_by, @modified, @modified_by) " +
+                $"returning id as Id, name as Name, surname as Surname, department_id as DepartmentId";
                 var queryArguments = new
                 {
-                    name = student.Name,
-                    surname = student.Surname,
-                    department = student.DepartmentId,
+                    name = req.Name,
+                    surname = req.Surname,
+                    department_id = req.DepartmentId,
                     created = student.Created,
                     created_by = student.CreatedBy,
                     modified = student.Modified,

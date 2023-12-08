@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using StudentIS.Dtos.Request;
 using StudentIS.Entities;
 using StudentIS.Exceptions;
 using StudentIS.Interfaces;
@@ -28,12 +29,12 @@ namespace StudentIS.Services
             throw new StudentNotFoundException("Student not found.");
         }
 
-        public Student AddStudent(Student student)
+        public Student AddStudent(AddStudentRequestModel req)
         {
-            if (_departmentService.CheckDepartmentExistance(student.DepartmentId))
+            if (_departmentService.CheckDepartmentExistance(req.DepartmentId))
             {
-                return _studentRepository.AddStudent(student);
-               
+                return _studentRepository.AddStudent(req);
+
             }
             throw new DepartmentNotFoundException("Department not found.");
         }
@@ -51,7 +52,7 @@ namespace StudentIS.Services
             {
                 throw new StudentNotFoundException("Student not found.");
             }
-            if (!_departmentService.CheckDepartmentExistance(departmentId) )
+            if (!_departmentService.CheckDepartmentExistance(departmentId))
             {
                 throw new DepartmentNotFoundException("Department not found.");
             }

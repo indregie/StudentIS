@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudentIS.Dtos;
+using StudentIS.Dtos.Request;
 using StudentIS.Entities;
 using StudentIS.Exceptions;
 using StudentIS.Interfaces;
@@ -26,33 +27,53 @@ namespace StudentIS.Controllers
         [HttpGet]
         public IActionResult GetStudentCourses([FromQuery] int studentId)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
                 return Ok(_studentService.GetStudentCourses(studentId));
             }
             catch (StudentNotFoundException ex)
             {
-                _logger.LogWarning("Some warning");
+                _logger.LogWarning("Some warning to prove a concept :) ");
                 return BadRequest(ex.Message);
             }
         }
 
         [HttpPost]
-        public IActionResult AddStudent(Student student)
+        public IActionResult AddStudent([FromBody] AddStudentRequestModel req)
         {
-           try
-           {
-                return Ok(_studentService.AddStudent(student));
-           } 
-            catch (DepartmentNotFoundException ex) 
-           {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
+                return Ok(_studentService.AddStudent(req));
+            }
+            catch (DepartmentNotFoundException ex)
+            {
                 return BadRequest(ex.Message);
-           }
+            }
         }
+
+        //TO BE IMPLEMENTED when finally understood :)
+        //private async Task<IActionResult> HandleErrorsAsync(Func<Task<OkObjectResult>> value)
+        //{
+
+        //    return await value();
+             
+        //}
 
         [HttpPut]
         public IActionResult UpdateStudentsDepartment([FromQuery] int studentId, [FromQuery] int departmentId)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
                 return Ok(_studentService.UpdateStudentsDepartment(studentId, departmentId));

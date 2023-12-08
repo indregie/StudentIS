@@ -22,6 +22,10 @@ namespace StudentIS.Controllers
         [HttpPost]
         public IActionResult CreateDepartmentStudentsCourses([FromBody] CreateDepartmentRequestModel req)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             return Ok(_departmentService.CreateDepartmentStudentsCourses(
                 req.department,
                 req.students,
@@ -32,6 +36,10 @@ namespace StudentIS.Controllers
         [HttpGet]
         public IActionResult GetDepartmentCourses([FromQuery] int departmentId)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
                 return Ok(_departmentService.GetDepartmentCourses(departmentId));
@@ -45,6 +53,10 @@ namespace StudentIS.Controllers
         [HttpGet]
         public IActionResult GetDepartmentStudents([FromQuery] int departmentId)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
                 return Ok(_departmentService.GetDepartmentStudents(departmentId));

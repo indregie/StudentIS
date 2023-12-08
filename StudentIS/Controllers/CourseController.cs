@@ -24,12 +24,28 @@ namespace StudentIS.Controllers
         [HttpPost]
         public IActionResult AddCourse([FromBody] AddCourseRequestModel req)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            try
+            {
                 return Ok(_courseService.AddCourse(req));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Unexpected error in AddCourse: {ex.Message}");
+                return StatusCode(500, "An unexpected error occurred.");
+            }
         }
 
         [HttpPost]
         public IActionResult AddCourseToDepartment(DepartmentCourses depCourse)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             try
             {
                 var c = _courseService.AddCourseToDepartment(depCourse);
@@ -42,6 +58,11 @@ namespace StudentIS.Controllers
             catch (CourseNotFoundException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Unexpected error in AddCourseToDepartment: {ex.Message}");
+                return StatusCode(500, "An unexpected error occurred.");
             }
         }
 
