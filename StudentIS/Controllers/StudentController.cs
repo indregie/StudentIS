@@ -3,6 +3,7 @@ using StudentIS.Dtos;
 using StudentIS.Entities;
 using StudentIS.Exceptions;
 using StudentIS.Interfaces;
+using StudentIS.Repositories;
 using StudentIS.Services;
 
 namespace StudentIS.Controllers
@@ -22,23 +23,19 @@ namespace StudentIS.Controllers
             _logger = logger;
         }
 
-        //perdaryti async
         [HttpGet]
-        public IActionResult GetStudents()
+        public IActionResult GetStudentCourses([FromQuery] int studentId)
         {
-            _logger.LogWarning("Some warning");
-            return Ok(_studentService.GetStudents());
+            try
+            {
+                return Ok(_studentService.GetStudentCourses(studentId));
+            }
+            catch (StudentNotFoundException ex)
+            {
+                _logger.LogWarning("Some warning");
+                return BadRequest(ex.Message);
+            }
         }
-
-        [HttpGet]
-        public IActionResult GetStudentCourses(
-                [FromQuery] int studentId
-            )
-        {
-            return Ok(_studentService.GetStudentCourses(studentId));
-        }
-
-
 
         [HttpPost]
         public IActionResult AddStudent(Student student)
@@ -51,8 +48,23 @@ namespace StudentIS.Controllers
            {
                 return BadRequest(ex.Message);
            }
-
         }
 
+        [HttpPut]
+        public IActionResult UpdateStudentsDepartment([FromQuery] int studentId, [FromQuery] int departmentId)
+        {
+            try
+            {
+                return Ok(_studentService.UpdateStudentsDepartment(studentId, departmentId));
+            }
+            catch (StudentNotFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (DepartmentNotFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

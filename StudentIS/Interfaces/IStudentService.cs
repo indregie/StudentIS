@@ -4,10 +4,9 @@ namespace StudentIS.Interfaces
 {
     public interface IStudentService
     {
-        List<Student> GetStudents();
-        //public int CreateDepartmentStudentsCourses(Department department, List<Student> students);
-        //public List<Course> GetDepartmentCourses(int departmentId);
         List<Course> GetStudentCourses(int studentId);
-        public Student AddStudent(Student student);
+        Student AddStudent(Student student);
+        bool CheckStudentExistance(int studentId);
+        Student UpdateStudentsDepartment(int studentId, int departmentId);
     }
 }

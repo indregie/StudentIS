@@ -12,8 +12,6 @@ namespace StudentIS.Services
             _departmentRepository = departmentRepository;
         }
 
-
-
         public int CreateDepartmentStudentsCourses(Department department, List<Student> students, List<Course> courses)
         {
             return _departmentRepository.CreateDepartmentStudentsCourses(department, students, courses);

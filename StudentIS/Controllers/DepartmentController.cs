@@ -21,7 +21,6 @@ namespace StudentIS.Controllers
         [HttpPost]
         public IActionResult CreateDepartmentStudentsCourses([FromBody] CreateDepartmentRequestModel req)
         {
-
             return Ok(_departmentService.CreateDepartmentStudentsCourses(
                 req.department,
                 req.students,
@@ -34,14 +33,12 @@ namespace StudentIS.Controllers
             [FromQuery] int departmentId
         )
         {
-            Console.WriteLine(departmentId);
             return Ok(_departmentService.GetDepartmentCourses(departmentId));
         }
 
         [HttpGet]
         public IActionResult GetDepartmentStudents([FromQuery] int departmentId)
         {
-            Console.WriteLine(departmentId);
             return Ok(_departmentService.GetDepartmentStudents(departmentId));
         }
 

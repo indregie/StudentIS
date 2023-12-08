@@ -4,8 +4,9 @@ namespace StudentIS.Interfaces
 {
     public interface IStudentRepository
     {
-        IEnumerable<Student> GetStudents();
         IEnumerable<Course> GetStudentCourses(int studentId);
-        public Student AddStudent(Student student);
+        Student AddStudent(Student student);
+        IEnumerable<Student> CheckStudentExistance(int studentId);
+        Student UpdateStudentsDepartment(int studentId, int departmentId);
     }
 }
